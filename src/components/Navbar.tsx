@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/store/useStore';
-import { Home, Trophy, User, ShoppingBag, Flame, Heart, Gem } from 'lucide-react';
+import { Home, Trophy, User, ShoppingBag, Flame, Heart, Gem, Twitter } from 'lucide-react';
 
 export function Navbar() {
   const pathname = usePathname();
@@ -13,6 +13,7 @@ export function Navbar() {
 
   const navItems = [
     { href: '/learn', icon: Home, label: 'Learn' },
+    { href: '/twitter', icon: Twitter, label: 'Inspire' },
     { href: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
     { href: '/shop', icon: ShoppingBag, label: 'Shop' },
     { href: '/profile', icon: User, label: 'Profile' },

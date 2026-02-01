@@ -126,3 +126,30 @@ export interface LeaderboardEntry {
   xp: number;
   rank: number;
 }
+
+// Twitter Types
+export interface TwitterUser {
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string;
+  bio: string;
+  verified: boolean;
+  followers: number;
+  following: number;
+}
+
+export interface Tweet {
+  id: string;
+  author: TwitterUser;
+  content: string;
+  timestamp: Date;
+  likes: number;
+  retweets: number;
+  replies: number;
+  views: number;
+  liked: boolean;
+  retweeted: boolean;
+  bookmarked: boolean;
+  category: 'discipline' | 'strength' | 'perseverance' | 'leadership' | 'mindset' | 'success';
+}
