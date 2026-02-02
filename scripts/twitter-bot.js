@@ -195,9 +195,9 @@ async function runBot() {
  * Run in scheduled mode (for cron jobs)
  */
 async function runScheduled() {
-  // Random delay to seem more human (0-30 minutes)
-  const delay = Math.floor(Math.random() * 30 * 60 * 1000);
-  console.log(`Waiting ${Math.round(delay / 1000 / 60)} minutes before posting...`);
+  // Random delay to seem more human (0-1 minute for testing)
+  const delay = Math.floor(Math.random() * 1 * 60 * 1000);
+  console.log(`Waiting ${Math.round(delay / 1000)} seconds before posting...`);
 
   await new Promise(resolve => setTimeout(resolve, delay));
   await runBot();
