@@ -6,13 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "tweet": "node scripts/twitter-bot.js",
+    "tweet:list": "node scripts/twitter-bot.js --list",
+    "tweet:dry": "node scripts/twitter-bot.js --dry-run",
+    "tweet:scheduled": "node scripts/twitter-bot.js --scheduled"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "twitter-api-v2": "^1.29.0",
     "uuid": "^13.0.0",
     "zustand": "^5.0.11"
   },
