@@ -4,6 +4,119 @@
  */
 
 const manualTweets = [
+  // === BULK POSTS - Favorite Stocks & Crypto ===
+  {
+    id: 'bulk-1',
+    text: `My highest conviction holdings right now:
+
+$TSLA - AI & robotics leader
+$DUOL - Dominating language learning
+$HIMS - Disrupting healthcare
+$LMND - AI-first insurance
+
+Long term winners. 🎯`,
+    likes: 0,
+    category: 'portfolio'
+  },
+  {
+    id: 'bulk-2',
+    text: `Crypto picks that I'm holding for the long run:
+
+$BTC - Digital gold, the OG
+$XMR - Privacy is a feature, not a bug
+$TAO - AI x Crypto convergence
+$ICP - Decentralized cloud computing
+
+Building generational wealth. 💎`,
+    likes: 0,
+    category: 'crypto'
+  },
+  {
+    id: 'bulk-3',
+    text: `$TSLA is not just a car company.
+
+It's an AI company.
+It's a robotics company.
+It's an energy company.
+
+Most people won't understand until it's too late.`,
+    likes: 0,
+    category: 'stock-analysis'
+  },
+  {
+    id: 'bulk-4',
+    text: `$HIMS is quietly building a healthcare empire.
+
+Telehealth + subscriptions + massive TAM = compounding machine.
+
+This one's going to surprise a lot of people.`,
+    likes: 0,
+    category: 'stock-analysis'
+  },
+  {
+    id: 'bulk-5',
+    text: `$LMND using AI to disrupt a $5 trillion insurance industry.
+
+Most incumbents are sleeping. They won't know what hit them.`,
+    likes: 0,
+    category: 'stock-analysis'
+  },
+  {
+    id: 'bulk-6',
+    text: `$BTC is the only asset with a truly fixed supply.
+
+21 million. Forever.
+
+In a world of infinite money printing, scarcity wins.`,
+    likes: 0,
+    category: 'crypto'
+  },
+  {
+    id: 'bulk-7',
+    text: `Why I'm bullish on $TAO:
+
+AI needs decentralization.
+$TAO is building the infrastructure.
+
+The intersection of AI and crypto is going to be massive.`,
+    likes: 0,
+    category: 'crypto'
+  },
+  {
+    id: 'bulk-8',
+    text: `$XMR - the only true privacy coin.
+
+In an era of surveillance, privacy isn't optional. It's essential.
+
+Monero just works.`,
+    likes: 0,
+    category: 'crypto'
+  },
+  {
+    id: 'bulk-9',
+    text: `$ICP is building Web3 the way it should be built.
+
+Full stack decentralization. No AWS. No middlemen.
+
+Underrated and undervalued.`,
+    likes: 0,
+    category: 'crypto'
+  },
+  {
+    id: 'bulk-10',
+    text: `Stocks I'm buying on every dip:
+
+$TSLA
+$DUOL
+$HIMS
+$LMND
+
+These companies are executing. The market will catch up.`,
+    likes: 0,
+    category: 'portfolio'
+  },
+
+  // === ORIGINAL TWEETS FROM SCREENSHOTS ===
   {
     id: '1',
     text: `People massively underestimate the TAM for language learning education.
