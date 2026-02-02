@@ -3,7 +3,7 @@
 /**
  * Twitter Rehash Bot for @NFTLunatic
  *
- * Fetches popular tweets about stocks/crypto and rehashes them
+ * Posts rehashed versions of popular tweets from a manual collection
  * Only rehashes tweets that haven't been posted in the last 5 days
  */
 
@@ -11,6 +11,7 @@ require('dotenv').config();
 const { TwitterApi } = require('twitter-api-v2');
 const fs = require('fs');
 const path = require('path');
+const { manualTweets } = require('./tweets-data');
 
 // Initialize Twitter client
 const client = new TwitterApi({
@@ -26,19 +27,6 @@ const rwClient = client.readWrite;
 // Path to track rehashed tweets
 const REHASH_TRACKER_PATH = path.join(__dirname, '../data/rehash-tracker.json');
 const DAYS_BEFORE_REHASH = 5;
-const MIN_LIKES_FOR_POPULAR = 10; // Minimum likes to consider a tweet "popular"
-
-// Keywords to identify crypto/stock tweets
-const CRYPTO_STOCK_KEYWORDS = [
-  'bitcoin', 'btc', 'ethereum', 'eth', 'crypto', 'nft', 'defi',
-  'stock', 'stocks', 'trading', 'trade', 'market', 'bull', 'bear',
-  'moon', 'pump', 'dump', 'hodl', 'dip', 'ath', 'altcoin', 'altcoins',
-  'sol', 'solana', 'doge', 'shib', 'xrp', 'ada', 'bnb', 'avax',
-  'portfolio', 'gains', 'profit', 'loss', 'chart', 'analysis',
-  'buy', 'sell', 'long', 'short', 'futures', 'spot', 'leverage',
-  '$', 'price', 'prediction', 'bullish', 'bearish', 'breakout',
-  'support', 'resistance', 'volume', 'whale', 'bag', 'airdrop'
-];
 
 /**
  * Load rehash tracker data
@@ -71,14 +59,6 @@ function saveRehashTracker(tracker) {
 }
 
 /**
- * Check if a tweet is about crypto/stocks
- */
-function isCryptoStockTweet(text) {
-  const lowerText = text.toLowerCase();
-  return CRYPTO_STOCK_KEYWORDS.some(keyword => lowerText.includes(keyword));
-}
-
-/**
  * Check if a tweet can be rehashed (hasn't been rehashed in 5+ days)
  */
 function canRehash(tweetId, tracker) {
@@ -90,59 +70,9 @@ function canRehash(tweetId, tracker) {
 }
 
 /**
- * Fetch user's popular tweets
- */
-async function fetchPopularTweets(username) {
-  try {
-    // Get user ID first
-    const user = await client.v2.userByUsername(username);
-    if (!user.data) {
-      throw new Error(`User @${username} not found`);
-    }
-
-    const userId = user.data.id;
-    console.log(`Found user @${username} (ID: ${userId})`);
-
-    // Fetch user's tweets (up to 100 recent tweets)
-    const tweets = await client.v2.userTimeline(userId, {
-      max_results: 100,
-      'tweet.fields': ['public_metrics', 'created_at', 'text'],
-      exclude: ['retweets', 'replies'],
-    });
-
-    if (!tweets.data?.data) {
-      console.log('No tweets found');
-      return [];
-    }
-
-    // Filter for popular crypto/stock tweets
-    const popularTweets = tweets.data.data
-      .filter(tweet => {
-        const likes = tweet.public_metrics?.like_count || 0;
-        return likes >= MIN_LIKES_FOR_POPULAR && isCryptoStockTweet(tweet.text);
-      })
-      .sort((a, b) => {
-        const likesA = a.public_metrics?.like_count || 0;
-        const likesB = b.public_metrics?.like_count || 0;
-        return likesB - likesA;
-      });
-
-    console.log(`Found ${popularTweets.length} popular crypto/stock tweets`);
-    return popularTweets;
-
-  } catch (error) {
-    console.error('Error fetching tweets:', error.message);
-    throw error;
-  }
-}
-
-/**
  * Rehash a tweet text (slightly modify to avoid duplicate detection)
  */
 function rehashTweetText(originalText) {
-  // Remove any URLs from the original
-  let text = originalText.replace(/https?:\/\/\S+/g, '').trim();
-
   // Add some variation
   const prefixes = [
     '🔥 ',
@@ -152,26 +82,31 @@ function rehashTweetText(originalText) {
     '⚡ ',
     '💰 ',
     '🎯 ',
+    '👀 ',
+    '📊 ',
+    '',
     '',
   ];
 
   const suffixes = [
     '',
+    '',
     ' 🔥',
     ' 💪',
     ' 📊',
-    ' #crypto #stocks',
-    ' #trading',
+    ' 👇',
+    '\n\n#stocks #investing',
+    '\n\n#trading',
   ];
 
   const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
   const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
 
-  let rehashed = prefix + text + suffix;
+  let rehashed = prefix + originalText + suffix;
 
   // Ensure tweet is within character limit
   if (rehashed.length > 280) {
-    rehashed = rehashed.substring(0, 277) + '...';
+    rehashed = originalText.substring(0, 277) + '...';
   }
 
   return rehashed;
@@ -187,6 +122,9 @@ async function postRehash(tweetText) {
     return result.data;
   } catch (error) {
     console.error('Error posting tweet:', error.message);
+    if (error.data) {
+      console.error('Twitter API error details:', JSON.stringify(error.data, null, 2));
+    }
     throw error;
   }
 }
@@ -199,45 +137,40 @@ async function runBot() {
   console.log('Twitter Rehash Bot for @NFTLunatic');
   console.log('='.repeat(50));
   console.log(`Time: ${new Date().toISOString()}`);
+  console.log(`Total tweets in collection: ${manualTweets.length}`);
   console.log('');
 
-  const username = process.env.TWITTER_USERNAME || 'NFTLunatic';
   const tracker = loadRehashTracker();
 
   try {
-    // Fetch popular tweets
-    const popularTweets = await fetchPopularTweets(username);
-
-    if (popularTweets.length === 0) {
-      console.log('No popular crypto/stock tweets found to rehash');
-      return;
-    }
-
     // Find a tweet that can be rehashed
-    let tweetToRehash = null;
-    for (const tweet of popularTweets) {
-      if (canRehash(tweet.id, tracker)) {
-        tweetToRehash = tweet;
-        break;
-      }
-    }
+    const availableTweets = manualTweets.filter(tweet => canRehash(tweet.id, tracker));
 
-    if (!tweetToRehash) {
-      console.log('All popular tweets have been rehashed recently (within 5 days)');
+    console.log(`Available tweets to rehash: ${availableTweets.length}`);
+
+    if (availableTweets.length === 0) {
+      console.log('All tweets have been rehashed recently (within 5 days)');
       console.log('Waiting for cooldown period...');
       return;
     }
 
+    // Pick a random tweet from available ones
+    const tweetToRehash = availableTweets[Math.floor(Math.random() * availableTweets.length)];
+
     console.log('');
     console.log('Selected tweet to rehash:');
     console.log(`- ID: ${tweetToRehash.id}`);
-    console.log(`- Likes: ${tweetToRehash.public_metrics?.like_count}`);
-    console.log(`- Original: ${tweetToRehash.text.substring(0, 100)}...`);
+    console.log(`- Category: ${tweetToRehash.category}`);
+    console.log(`- Original likes: ${tweetToRehash.likes}`);
+    console.log(`- Preview: ${tweetToRehash.text.substring(0, 100)}...`);
     console.log('');
 
     // Rehash the tweet
     const rehashed = rehashTweetText(tweetToRehash.text);
-    console.log(`Rehashed: ${rehashed}`);
+    console.log('Rehashed version:');
+    console.log('-'.repeat(40));
+    console.log(rehashed);
+    console.log('-'.repeat(40));
     console.log('');
 
     // Post the rehashed tweet
@@ -250,6 +183,7 @@ async function runBot() {
     console.log('');
     console.log('✅ Successfully rehashed tweet!');
     console.log(`New tweet ID: ${posted.id}`);
+    console.log(`View at: https://twitter.com/NFTLunatic/status/${posted.id}`);
 
   } catch (error) {
     console.error('Bot error:', error.message);
@@ -280,7 +214,7 @@ Usage:
   node twitter-bot.js              Run once immediately
   node twitter-bot.js --scheduled  Run with random delay (for cron)
   node twitter-bot.js --dry-run    Show what would be posted without posting
-  node twitter-bot.js --list       List popular tweets without posting
+  node twitter-bot.js --list       List available tweets to rehash
 
 Options:
   --help, -h      Show this help message
@@ -292,40 +226,38 @@ Options:
 }
 
 if (args.includes('--list')) {
-  (async () => {
-    const username = process.env.TWITTER_USERNAME || 'NFTLunatic';
-    const tracker = loadRehashTracker();
-    const tweets = await fetchPopularTweets(username);
+  const tracker = loadRehashTracker();
 
-    console.log('\nPopular crypto/stock tweets:');
-    console.log('-'.repeat(50));
+  console.log('\nManual tweet collection:');
+  console.log('-'.repeat(50));
 
-    tweets.forEach((tweet, i) => {
-      const canRehashNow = canRehash(tweet.id, tracker);
-      const status = canRehashNow ? '✅ Can rehash' : '⏳ Cooling down';
-      console.log(`\n${i + 1}. [${status}]`);
-      console.log(`   Likes: ${tweet.public_metrics?.like_count} | RT: ${tweet.public_metrics?.retweet_count}`);
-      console.log(`   ${tweet.text.substring(0, 100)}...`);
-    });
-  })();
+  manualTweets.forEach((tweet, i) => {
+    const canRehashNow = canRehash(tweet.id, tracker);
+    const lastRehash = tracker.rehashes[tweet.id];
+    const status = canRehashNow ? '✅ Can rehash' : `⏳ Last: ${new Date(lastRehash).toLocaleDateString()}`;
+    console.log(`\n${i + 1}. [${status}]`);
+    console.log(`   Category: ${tweet.category} | Original likes: ${tweet.likes}`);
+    console.log(`   ${tweet.text.substring(0, 80)}...`);
+  });
+
+  const available = manualTweets.filter(t => canRehash(t.id, tracker)).length;
+  console.log(`\n\nTotal: ${manualTweets.length} tweets, ${available} available to rehash`);
+
 } else if (args.includes('--dry-run')) {
-  (async () => {
-    const username = process.env.TWITTER_USERNAME || 'NFTLunatic';
-    const tracker = loadRehashTracker();
-    const tweets = await fetchPopularTweets(username);
+  const tracker = loadRehashTracker();
+  const availableTweets = manualTweets.filter(tweet => canRehash(tweet.id, tracker));
 
-    const tweetToRehash = tweets.find(t => canRehash(t.id, tracker));
-
-    if (tweetToRehash) {
-      const rehashed = rehashTweetText(tweetToRehash.text);
-      console.log('\n[DRY RUN] Would post:');
-      console.log('-'.repeat(50));
-      console.log(rehashed);
-      console.log('-'.repeat(50));
-    } else {
-      console.log('No tweets available to rehash');
-    }
-  })();
+  if (availableTweets.length > 0) {
+    const tweetToRehash = availableTweets[Math.floor(Math.random() * availableTweets.length)];
+    const rehashed = rehashTweetText(tweetToRehash.text);
+    console.log('\n[DRY RUN] Would post:');
+    console.log('-'.repeat(50));
+    console.log(rehashed);
+    console.log('-'.repeat(50));
+    console.log(`\nCharacter count: ${rehashed.length}/280`);
+  } else {
+    console.log('No tweets available to rehash (all on cooldown)');
+  }
 } else if (args.includes('--scheduled')) {
   runScheduled();
 } else {
