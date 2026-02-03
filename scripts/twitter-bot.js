@@ -122,8 +122,15 @@ async function postRehash(tweetText) {
     return result.data;
   } catch (error) {
     console.error('Error posting tweet:', error.message);
+    console.error('Full error:', JSON.stringify(error, null, 2));
     if (error.data) {
       console.error('Twitter API error details:', JSON.stringify(error.data, null, 2));
+    }
+    if (error.code) {
+      console.error('Error code:', error.code);
+    }
+    if (error.errors) {
+      console.error('Errors array:', JSON.stringify(error.errors, null, 2));
     }
     throw error;
   }
