@@ -10,7 +10,8 @@
     "tweet": "node scripts/twitter-bot.js",
     "tweet:list": "node scripts/twitter-bot.js --list",
     "tweet:dry": "node scripts/twitter-bot.js --dry-run",
-    "tweet:scheduled": "node scripts/twitter-bot.js --scheduled"
+    "tweet:scheduled": "node scripts/twitter-bot.js --scheduled",
+    "earnings": "node scripts/earnings-tweets.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
