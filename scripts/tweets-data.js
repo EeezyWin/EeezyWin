@@ -115,6 +115,26 @@ These companies are executing. The market will catch up.`,
     likes: 0,
     category: 'portfolio'
   },
+  {
+    id: 'bulk-11',
+    text: `$TEM is bringing AI to healthcare.
+
+Precision medicine powered by the largest clinical dataset in the industry.
+
+This is how healthcare gets disrupted.`,
+    likes: 0,
+    category: 'stock-analysis'
+  },
+  {
+    id: 'bulk-12',
+    text: `$TWST is revolutionizing synthetic biology.
+
+DNA synthesis at scale. The picks and shovels of biotech.
+
+Massive TAM. Early innings.`,
+    likes: 0,
+    category: 'stock-analysis'
+  },
 
   // === ORIGINAL TWEETS FROM SCREENSHOTS ===
   {
@@ -179,7 +199,7 @@ $ROOT at a P/S of 1 despite being profitable and historically compounding revenu
 
 $ZETA at a P/S of 4 despite very steady predictable growth and being profitable. It also has a strong AI + data flywheel moat.
 
-$NXT at a P/S of 3.7 despite being the leader in utility scale solar and consistently growing despite the headwinds in its industry and a multibillion dollar backlog.`,
+$TEM - AI-powered precision medicine with massive healthcare TAM.`,
     likes: 18,
     category: 'stock-picks'
   }
