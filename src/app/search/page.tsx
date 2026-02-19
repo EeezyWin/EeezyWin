@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@supabase/supabase-js'
-import { toUrlSegment } from '@/lib/slugify'
 import SearchBar from '@/components/layout/SearchBar'
 
 export const dynamic = 'force-dynamic'
@@ -142,9 +141,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               {results.length} result{results.length !== 1 ? 's' : ''} for &ldquo;{q}&rdquo;
             </p>
             <div className="space-y-4">
-              {results.map((clinic) => {
-                const stateParam = toUrlSegment(clinic.state)
-                return (
+              {results.map((clinic) => (
                   <Link
                     key={clinic.slug}
                     href={`/provider/${clinic.slug}`}
@@ -180,13 +177,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                         )}
                       </div>
                       <p className="text-sm text-neutral-500 mt-1">
-                        <Link
-                          href={`/clinics/${stateParam}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="hover:text-teal transition-colors"
-                        >
+                        <span className="text-neutral-500">
                           {clinic.city}, {clinic.state_code}
-                        </Link>
+                        </span>
                         {clinic.primary_modality && (
                           <span> &middot; {clinic.primary_modality}</span>
                         )}
@@ -206,8 +199,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
-                )
-              })}
+              ))}
             </div>
 
             <div className="mt-8 text-center">
