@@ -35,6 +35,9 @@ interface ClinicResult {
   phone: string | null
 }
 
+const SELECT_FIELDS =
+  'slug, name, city, state, state_code, primary_modality, verification_status, photo, address_line1, phone'
+
 async function search(q: string): Promise<ClinicResult[]> {
   if (!q || q.length < 2) return []
 
@@ -43,27 +46,37 @@ async function search(q: string): Promise<ClinicResult[]> {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
-  const { data, error } = await supabase
+  // Strategy 1: Full-text search — fast, ranked, handles stemming
+  const { data: ftsData } = await supabase
     .from('clinics')
-    .select(
-      'slug, name, city, state, state_code, primary_modality, verification_status, photo, address_line1, phone'
-    )
+    .select(SELECT_FIELDS)
     .textSearch('search_vector', q, { type: 'websearch', config: 'english' })
     .limit(30)
 
-  if (error || !data?.length) {
-    // ilike fallback
-    const { data: fallback } = await supabase
-      .from('clinics')
-      .select(
-        'slug, name, city, state, state_code, primary_modality, verification_status, photo, address_line1, phone'
-      )
-      .or(`name.ilike.%${q}%,city.ilike.%${q}%,state.ilike.%${q}%`)
-      .limit(30)
-    return fallback ?? []
+  if (ftsData && ftsData.length > 0) {
+    return ftsData
   }
 
-  return data
+  // Strategy 2: Per-word ilike across name, city, state, modality
+  // Splitting "white plains" into ["white","plains"] means both words match
+  // their respective parts of "White Plains, NY"
+  const words = q.split(/\s+/).filter(Boolean)
+  const conditions = words
+    .flatMap((word) => [
+      `name.ilike.%${word}%`,
+      `city.ilike.%${word}%`,
+      `state.ilike.%${word}%`,
+      `primary_modality.ilike.%${word}%`,
+    ])
+    .join(',')
+
+  const { data: ilikeData } = await supabase
+    .from('clinics')
+    .select(SELECT_FIELDS)
+    .or(conditions)
+    .limit(30)
+
+  return ilikeData ?? []
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
