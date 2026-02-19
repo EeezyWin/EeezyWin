@@ -31,12 +31,12 @@ interface ClinicResult {
   primary_modality: string | null
   verification_status: string
   photo: string | null
-  address_line1: string | null
+  address: string | null
   phone: string | null
 }
 
 const SELECT_FIELDS =
-  'slug, name, city, state, state_code, primary_modality, verification_status, photo, address_line1, phone'
+  'slug, name, city, state, state_code, primary_modality, verification_status, photo, address, phone'
 
 async function search(q: string): Promise<ClinicResult[]> {
   if (!q || q.length < 2) return []
@@ -191,8 +191,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                           <span> &middot; {clinic.primary_modality}</span>
                         )}
                       </p>
-                      {clinic.address_line1 && (
-                        <p className="text-xs text-neutral-400 mt-1 truncate">{clinic.address_line1}</p>
+                      {clinic.address && (
+                        <p className="text-xs text-neutral-400 mt-1 truncate">{clinic.address}</p>
                       )}
                     </div>
 
