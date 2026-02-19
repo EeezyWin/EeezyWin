@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       const { Resend } = await import('resend')
       const resend = new Resend(resendKey)
       await resend.emails.send({
-        from: 'Psychedelic Beacon <claims@psychedelicbeacon.com>',
+        from: 'Psychedelic Beacon <onboarding@resend.dev>',
         to: ownerEmail,
         replyTo: email,
         subject: `Claim Request: ${clinicName}`,
