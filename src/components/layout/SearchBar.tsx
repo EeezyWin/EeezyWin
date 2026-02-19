@@ -76,7 +76,7 @@ export default function SearchBar({
     e.preventDefault()
     if (query.trim()) {
       setIsOpen(false)
-      router.push(`/api/search?q=${encodeURIComponent(query.trim())}`)
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`)
     }
   }
 

@@ -25,7 +25,7 @@ export default function Header() {
         {/* Nav */}
         <nav className="flex items-center gap-1">
           <Link
-            href="/clinics/new-york"
+            href="/clinics"
             className="px-3 py-2 text-sm font-medium text-neutral-600 hover:text-teal rounded-lg hover:bg-teal-50 transition-colors hidden sm:block"
           >
             Browse
@@ -37,7 +37,7 @@ export default function Header() {
             How It Works
           </Link>
           <Link
-            href="/api/search"
+            href="/clinics"
             className="ml-2 px-4 py-2 text-sm font-semibold text-white bg-teal rounded-xl hover:bg-teal-dark transition-colors"
           >
             Find a Clinic
