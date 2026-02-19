@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data (large CSV — not needed in repo)
+/data/
+
+# supabase schema (contains project URL — keep local)
+supabase-schema.sql
