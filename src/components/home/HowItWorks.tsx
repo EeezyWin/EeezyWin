@@ -1,3 +1,8 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+
 const STEPS = [
   {
     number: '01',
@@ -32,6 +37,31 @@ const STEPS = [
 ]
 
 export default function HowItWorks() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
+  function handleFindNearMe() {
+    if (!navigator.geolocation) {
+      // No geolocation support — fall back to search bar
+      document.getElementById('search')?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+
+    setLoading(true)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords
+        router.push(`/search?lat=${latitude.toFixed(5)}&lng=${longitude.toFixed(5)}&radius=25`)
+      },
+      () => {
+        // Permission denied or error — fall back to search bar
+        setLoading(false)
+        document.getElementById('search')?.scrollIntoView({ behavior: 'smooth' })
+      },
+      { timeout: 10000 }
+    )
+  }
+
   return (
     <section id="how-it-works" className="bg-white py-20">
       <div className="container-narrow">
@@ -48,7 +78,7 @@ export default function HowItWorks() {
           {/* Connector line (desktop) */}
           <div className="hidden md:block absolute top-10 left-1/4 right-1/4 h-px bg-teal-100" />
 
-          {STEPS.map((step, i) => (
+          {STEPS.map((step) => (
             <div key={step.number} className="flex flex-col items-center text-center relative">
               <div className="w-16 h-16 rounded-2xl bg-teal flex items-center justify-center text-white mb-5 shadow-md relative z-10">
                 {step.icon}
@@ -64,13 +94,30 @@ export default function HowItWorks() {
 
         {/* CTA */}
         <div className="text-center mt-14">
-          <div className="inline-flex flex-col sm:flex-row gap-4">
-            <a
-              href="/#search"
-              className="px-8 py-4 bg-teal text-white font-bold rounded-xl hover:bg-teal-dark transition-colors text-base"
+          <div className="inline-flex flex-col sm:flex-row gap-4 items-center">
+            <button
+              onClick={handleFindNearMe}
+              disabled={loading}
+              className="px-8 py-4 bg-teal text-white font-bold rounded-xl hover:bg-teal-dark transition-colors text-base disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              Find Clinics Near Me
-            </a>
+              {loading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Locating…
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Find Clinics Near Me
+                </>
+              )}
+            </button>
             <p className="text-neutral-500 text-sm self-center">
               Free to use · No account required
             </p>

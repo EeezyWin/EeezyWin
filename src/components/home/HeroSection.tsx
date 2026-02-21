@@ -1,9 +1,9 @@
 import SearchBar from '@/components/layout/SearchBar'
 
 const STATS = [
-  { value: '609', label: 'Verified Providers' },
-  { value: '34', label: 'States Covered' },
-  { value: '286', label: 'Verified Listings' },
+  { value: '639', label: 'Verified Providers' },
+  { value: '49', label: 'States Covered' },
+  { value: '310', label: 'Verified Listings' },
 ]
 
 export default function HeroSection() {
@@ -31,11 +31,11 @@ export default function HeroSection() {
 
         {/* Subheadline */}
         <p className="text-lg sm:text-xl text-teal-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-          Trusted, verified providers for ketamine infusions, Spravato, and integrative psychedelic therapy — across 34 states.
+          Trusted, verified providers for ketamine infusions, Spravato, and integrative psychedelic therapy — across 49 states.
         </p>
 
         {/* Search */}
-        <div className="max-w-xl mx-auto mb-12">
+        <div id="search" className="max-w-xl mx-auto mb-12">
           <SearchBar
             large
             placeholder="Search city, clinic name, or treatment type…"
