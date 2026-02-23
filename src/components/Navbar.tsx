@@ -1,91 +1,78 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useStore } from '@/store/useStore';
-import { Home, Trophy, User, ShoppingBag, Flame, Heart, Gem } from 'lucide-react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  Camera,
+  Clock,
+  Home,
+  Settings,
+} from "lucide-react";
+
+const navItems = [
+  { href: "/", icon: Home, label: "Home" },
+  { href: "/scan", icon: Camera, label: "Scan" },
+  { href: "/history", icon: Clock, label: "History" },
+  { href: "/settings", icon: Settings, label: "Settings" },
+];
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user, isAuthenticated } = useStore();
 
-  if (!isAuthenticated) return null;
-
-  const navItems = [
-    { href: '/learn', icon: Home, label: 'Learn' },
-    { href: '/leaderboard', icon: Trophy, label: 'Leaderboard' },
-    { href: '/shop', icon: ShoppingBag, label: 'Shop' },
-    { href: '/profile', icon: User, label: 'Profile' },
-  ];
+  // Don't show nav on results page
+  if (pathname?.startsWith("/results")) return null;
 
   return (
     <>
-      {/* Top Stats Bar */}
-      <header className="fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 z-50 flex items-center justify-between px-4">
-        <Link href="/learn" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-[#58cc02]">Lingo</span>
+      {/* Desktop top nav */}
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50 px-6 items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">KI</span>
+          </div>
+          <span className="font-bold text-lg text-gray-900">KPI Identifier</span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1 text-[#ff9600]">
-            <Flame className="w-6 h-6 fill-current" />
-            <span className="font-bold">{user?.streak || 0}</span>
-          </div>
-
-          <div className="flex items-center gap-1 text-[#ff4b4b]">
-            <Heart className="w-6 h-6 fill-current" />
-            <span className="font-bold">{user?.hearts || 0}</span>
-          </div>
-
-          <div className="flex items-center gap-1 text-[#1cb0f6]">
-            <Gem className="w-6 h-6 fill-current" />
-            <span className="font-bold">{user?.gems || 0}</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Bottom Navigation (Mobile) */}
-      <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 z-50 md:hidden">
-        <div className="flex items-center justify-around h-full">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+        <div className="flex items-center gap-1">
+          {navItems.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href;
             return (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-xl transition-colors ${
-                  isActive ? 'text-[#1cb0f6]' : 'text-gray-400 hover:text-gray-600'
+                key={href}
+                href={href}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-blue-50 text-blue-600"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
-                <item.icon className={`w-6 h-6 ${isActive ? 'fill-current' : ''}`} />
-                <span className="text-xs font-medium">{item.label}</span>
+                <Icon size={18} />
+                {label}
               </Link>
             );
           })}
         </div>
       </nav>
 
-      {/* Side Navigation (Desktop) */}
-      <nav className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-white border-r border-gray-200 z-40 flex-col p-4">
-        <div className="flex flex-col gap-2">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-bold ${
-                  isActive
-                    ? 'bg-[#ddf4ff] text-[#1cb0f6] border-2 border-[#84d8ff]'
-                    : 'text-gray-500 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className={`w-6 h-6 ${isActive ? '' : ''}`} />
-                <span className="text-sm uppercase tracking-wide">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-gray-200 z-50 flex items-center justify-around px-2 safe-area-bottom">
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const isActive = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                isActive
+                  ? "text-blue-600"
+                  : "text-gray-400 hover:text-gray-600"
+              }`}
+            >
+              <Icon size={20} />
+              {label}
+            </Link>
+          );
+        })}
       </nav>
     </>
   );

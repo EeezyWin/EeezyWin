@@ -1,197 +1,202 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useStore } from '@/store/useStore';
-import { Button } from '@/components/Button';
-import { courses } from '@/data/courses';
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import {
+  Camera,
+  Sparkles,
+  BarChart3,
+  BookOpen,
+  ArrowRight,
+  Zap,
+  Shield,
+  TrendingUp,
+} from "lucide-react";
 
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
-  const { isAuthenticated, login, selectCourse } = useStore();
-  const [showAuth, setShowAuth] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push('/learn');
-    }
-  }, [isAuthenticated, router]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (username.trim() && email.trim()) {
-      login(username, email);
-      if (selectedCourseId) {
-        selectCourse(selectedCourseId);
-      }
-      router.push('/learn');
-    }
-  };
-
-  const handleGetStarted = () => {
-    setShowAuth(true);
-  };
-
-  if (showAuth && !selectedCourseId) {
-    return (
-      <div className="min-h-screen bg-[#235390] flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl font-bold text-white mb-8">I want to learn...</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-2xl">
-          {courses.map((course) => (
-            <button
-              key={course.id}
-              onClick={() => setSelectedCourseId(course.id)}
-              className="bg-white rounded-2xl p-6 flex items-center gap-4 hover:scale-105 transition-transform shadow-lg"
-            >
-              <span className="text-4xl">{course.flag}</span>
-              <div className="text-left">
-                <h3 className="font-bold text-lg">{course.name}</h3>
-                <p className="text-sm text-gray-500">{course.description}</p>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (showAuth) {
-    return (
-      <div className="min-h-screen bg-[#235390] flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-[#58cc02] mb-2">Lingo</h1>
-            <p className="text-white text-lg">
-              {isLogin ? 'Welcome back!' : 'Create your account'}
-            </p>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#1cb0f6] focus:outline-none transition-colors"
-                  placeholder="Enter your username"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#1cb0f6] focus:outline-none transition-colors"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              <Button type="submit" fullWidth size="lg">
-                {isLogin ? 'Log In' : 'Create Account'}
-              </Button>
-            </form>
-
-            <div className="mt-4 text-center">
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-[#1cb0f6] font-medium hover:underline"
-              >
-                {isLogin
-                  ? "Don't have an account? Sign up"
-                  : 'Already have an account? Log in'}
-              </button>
-            </div>
-          </div>
-
-          <button
-            onClick={() => {
-              setShowAuth(false);
-              setSelectedCourseId(null);
-            }}
-            className="mt-4 text-white/80 hover:text-white text-sm"
-          >
-            ← Back to language selection
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-[#235390] flex flex-col">
-      {/* Hero Section */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-        <div className="mb-8">
-          <h1 className="text-5xl md:text-7xl font-bold text-[#58cc02] mb-4">
-            Lingo
+    <div className="min-h-screen pb-20 md:pb-8 md:pt-20">
+      {/* Hero */}
+      <section className="px-4 pt-12 pb-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full text-xs font-medium text-blue-700 mb-6">
+            <Sparkles size={12} />
+            AI-Powered Financial Analysis
+          </div>
+
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">
+            Snap a financial document.
+            <br />
+            <span className="text-blue-600">Understand it instantly.</span>
           </h1>
-          <p className="text-white text-xl md:text-2xl mb-2">
-            The free, fun, and effective way to learn a language!
+
+          <p className="text-base text-gray-600 max-w-md mx-auto mb-8 leading-relaxed">
+            Photograph any earnings report, balance sheet, or financial statement.
+            Get every key metric extracted, explained in plain English, and
+            benchmarked against industry standards.
           </p>
-        </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-          <Button onClick={handleGetStarted} fullWidth size="lg">
-            Get Started
-          </Button>
           <Button
-            onClick={() => {
-              setShowAuth(true);
-              setIsLogin(true);
-            }}
-            variant="outline"
-            fullWidth
+            variant="primary"
             size="lg"
-            className="bg-white"
+            className="px-8"
+            onClick={() => router.push("/scan")}
           >
-            I Already Have an Account
+            <Camera size={18} className="mr-2" />
+            Scan a Document
+            <ArrowRight size={16} className="ml-2" />
           </Button>
         </div>
+      </section>
 
-        {/* Feature highlights */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl">
-          <div className="text-center">
-            <div className="text-5xl mb-4">🎯</div>
-            <h3 className="text-white font-bold text-lg mb-2">Effective</h3>
-            <p className="text-white/70 text-sm">
-              Our courses effectively teach reading, listening, and speaking skills.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-5xl mb-4">🎮</div>
-            <h3 className="text-white font-bold text-lg mb-2">Fun</h3>
-            <p className="text-white/70 text-sm">
-              Game-like lessons and fun challenges make learning addictive.
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="text-5xl mb-4">💰</div>
-            <h3 className="text-white font-bold text-lg mb-2">Free</h3>
-            <p className="text-white/70 text-sm">
-              Learn languages without spending a dime. No hidden fees.
-            </p>
+      {/* How it works */}
+      <section className="px-4 py-10">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-lg font-bold text-gray-900 text-center mb-8">
+            How it works
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-3 bg-blue-100">
+                <Camera size={22} className="text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 text-sm mb-1.5">
+                1. Capture
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Take a photo or upload an image of any financial document — earnings releases, 10-Ks, investor slides.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-3 bg-violet-100">
+                <Sparkles size={22} className="text-violet-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 text-sm mb-1.5">
+                2. Extract
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                AI identifies and extracts every financial KPI: revenue, margins, growth rates, ratios, and more.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 text-center hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-3 bg-emerald-100">
+                <BarChart3 size={22} className="text-emerald-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 text-sm mb-1.5">
+                3. Understand
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed">
+                See each metric explained in plain English, color-coded by health, and compared against industry benchmarks.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Footer */}
-      <footer className="p-4 text-center text-white/50 text-sm">
-        <p>A Duolingo Clone - Built with Next.js</p>
-      </footer>
+      {/* Features */}
+      <section className="px-4 py-10 bg-gray-100">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-lg font-bold text-gray-900 text-center mb-8">
+            Built for clarity
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex gap-3 p-4 bg-white rounded-xl border border-gray-200">
+              <div className="flex-shrink-0 w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                <Zap size={16} className="text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm">Instant Analysis</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Results in under 5 seconds. Powered by state-of-the-art vision AI.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 p-4 bg-white rounded-xl border border-gray-200">
+              <div className="flex-shrink-0 w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                <BookOpen size={16} className="text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm">Plain English</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Every metric explained like a financial advisor is sitting next to you.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 p-4 bg-white rounded-xl border border-gray-200">
+              <div className="flex-shrink-0 w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                <TrendingUp size={16} className="text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm">Industry Benchmarks</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Automatic comparison against 20+ industry sector medians and percentiles.</p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 p-4 bg-white rounded-xl border border-gray-200">
+              <div className="flex-shrink-0 w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                <Shield size={16} className="text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm">Privacy-First</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Your documents go directly to the AI provider. We never store your data.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Supported documents */}
+      <section className="px-4 py-10">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-lg font-bold text-gray-900 mb-4">
+            Works with any financial document
+          </h2>
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              "Earnings Releases",
+              "Income Statements",
+              "Balance Sheets",
+              "Cash Flow Statements",
+              "Investor Presentations",
+              "10-K / 10-Q Filings",
+              "Annual Reports",
+              "Quarterly Results",
+            ].map((doc) => (
+              <span
+                key={doc}
+                className="px-3 py-1.5 bg-gray-100 rounded-full text-xs font-medium text-gray-700"
+              >
+                {doc}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-4 py-10">
+        <div className="max-w-md mx-auto text-center">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">
+            Ready to try it?
+          </h2>
+          <p className="text-sm text-gray-500 mb-5">
+            Configure your API key in Settings and scan your first document.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button variant="primary" onClick={() => router.push("/scan")}>
+              <Camera size={16} className="mr-2" />
+              Start Scanning
+            </Button>
+            <Button variant="secondary" onClick={() => router.push("/settings")}>
+              Configure API Key
+            </Button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

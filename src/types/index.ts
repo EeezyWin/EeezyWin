@@ -1,128 +1,76 @@
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  avatar: string;
-  xp: number;
-  level: number;
-  streak: number;
-  hearts: number;
-  gems: number;
-  lastPracticeDate: string | null;
-  createdAt: string;
-  achievements: string[];
-  currentCourseId: string | null;
-}
-
-export interface Course {
-  id: string;
+export interface ExtractedKPI {
   name: string;
-  fromLanguage: string;
-  toLanguage: string;
-  flag: string;
-  description: string;
-  units: Unit[];
+  standardizedName: string;
+  value: number;
+  formattedValue: string;
+  unit: "millions" | "billions" | "thousands" | "percentage" | "ratio" | "number";
+  currency?: string;
+  gaap: boolean;
+  yoyChangePct?: number;
+  category: KPICategory;
+  explanation: string;
+  healthIndicator: "strong" | "typical" | "concerning";
+  confidence: "high" | "medium" | "low";
+  period?: string;
 }
 
-export interface Unit {
+export type KPICategory =
+  | "revenue"
+  | "profitability"
+  | "liquidity"
+  | "leverage"
+  | "growth"
+  | "efficiency"
+  | "valuation"
+  | "cash_flow";
+
+export interface ScanResult {
   id: string;
-  title: string;
-  description: string;
-  lessons: Lesson[];
-  order: number;
+  timestamp: number;
+  companyName: string | null;
+  ticker: string | null;
+  sector: string | null;
+  industry: string | null;
+  documentType: string | null;
+  period: string | null;
+  kpis: ExtractedKPI[];
+  imageDataUrl?: string;
+  thumbnailUrl?: string;
 }
 
-export interface Lesson {
-  id: string;
-  title: string;
-  description: string;
-  xpReward: number;
-  exercises: Exercise[];
-  order: number;
-  type: 'skill' | 'checkpoint' | 'bonus';
+export interface IndustryBenchmark {
+  industry: string;
+  metrics: Record<
+    string,
+    {
+      median: number;
+      p25: number;
+      p75: number;
+      unit: string;
+    }
+  >;
 }
 
-export type ExerciseType =
-  | 'multiple-choice'
-  | 'translation'
-  | 'fill-blank'
-  | 'matching'
-  | 'listening'
-  | 'speaking';
-
-export interface BaseExercise {
-  id: string;
-  type: ExerciseType;
-  instruction: string;
-}
-
-export interface MultipleChoiceExercise extends BaseExercise {
-  type: 'multiple-choice';
-  question: string;
-  options: string[];
-  correctAnswer: string;
-  audioUrl?: string;
-}
-
-export interface TranslationExercise extends BaseExercise {
-  type: 'translation';
-  sentence: string;
-  correctTranslations: string[];
-  wordBank: string[];
-  direction: 'toTarget' | 'fromTarget';
-}
-
-export interface FillBlankExercise extends BaseExercise {
-  type: 'fill-blank';
-  sentence: string;
-  blank: string;
-  options: string[];
-  correctAnswer: string;
-}
-
-export interface MatchingExercise extends BaseExercise {
-  type: 'matching';
-  pairs: { left: string; right: string }[];
-}
-
-export interface ListeningExercise extends BaseExercise {
-  type: 'listening';
-  audioText: string;
-  options: string[];
-  correctAnswer: string;
-}
-
-export type Exercise =
-  | MultipleChoiceExercise
-  | TranslationExercise
-  | FillBlankExercise
-  | MatchingExercise
-  | ListeningExercise;
-
-export interface Progress {
-  lessonId: string;
-  completed: boolean;
-  perfectScore: boolean;
-  lastAttempt: string | null;
-  bestScore: number;
-  attempts: number;
-}
-
-export interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  requirement: {
-    type: 'xp' | 'streak' | 'lessons' | 'perfect';
-    value: number;
+export interface ExtractionResponse {
+  success: boolean;
+  data?: {
+    companyName: string | null;
+    ticker: string | null;
+    sector: string | null;
+    industry: string | null;
+    documentType: string | null;
+    period: string | null;
+    kpis: ExtractedKPI[];
   };
+  error?: string;
 }
 
-export interface LeaderboardEntry {
-  userId: string;
-  username: string;
-  avatar: string;
-  xp: number;
-  rank: number;
+export interface BenchmarkComparison {
+  kpiName: string;
+  value: number;
+  industryMedian: number;
+  industryP25: number;
+  industryP75: number;
+  percentileEstimate: number;
+  rating: "strong" | "typical" | "concerning";
 }
