@@ -7,7 +7,7 @@ const STEPS = [
   {
     number: '01',
     title: 'Search Your Area',
-    description: 'Enter your city or browse by state to find providers near you. Filter by treatment type, insurance, and more.',
+    description: 'Enter your city or browse by state to explore providers across 14 states. Filter by treatment type to find what fits your needs.',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -16,8 +16,8 @@ const STEPS = [
   },
   {
     number: '02',
-    title: 'Compare Clinics',
-    description: 'Review detailed profiles with modalities, pricing, hours, insurance acceptance, and provider credentials.',
+    title: 'Compare Providers',
+    description: 'View clinic profiles with treatment modalities offered, contact information, hours, location details, and insurance acceptance where available.',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -26,8 +26,8 @@ const STEPS = [
   },
   {
     number: '03',
-    title: 'Book Your Appointment',
-    description: 'Call directly, visit their website, or use their online booking link — we connect you straight to the provider.',
+    title: 'Connect Directly',
+    description: 'Reach out to your chosen provider by phone, website, or booking link. No middleman — we connect you straight to the clinic.',
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -70,7 +70,7 @@ export default function HowItWorks() {
             How It Works
           </h2>
           <p className="text-lg text-neutral-500 max-w-xl mx-auto">
-            Finding the right psychedelic therapy provider is simple with Psychedelic Beacon.
+            Your guide to finding a trusted psychedelic therapy provider — no account needed, completely free.
           </p>
         </div>
 
@@ -98,7 +98,7 @@ export default function HowItWorks() {
             <button
               onClick={handleFindNearMe}
               disabled={loading}
-              className="px-8 py-4 bg-teal text-white font-bold rounded-xl hover:bg-teal-dark transition-colors text-base disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-8 py-4 bg-teal text-white font-bold rounded-btn hover:bg-teal-dark transition-colors text-base disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading ? (
                 <>
